@@ -12,7 +12,12 @@ public class Player : MonoBehaviour
     public CharacterController Controller { get; private set; }
     public Health health { get; private set; }
     public TextMeshProUGUI timeText;
+    public TextMeshProUGUI cleartime;
     private PlayerStateMachine stateMachine;
+
+    public GameObject HUD;
+    public GameObject gameOverUI;
+    public GameObject gameClearUI;
     private void Awake()
     { 
         Rigidbody = GetComponent<Rigidbody>();
@@ -20,6 +25,7 @@ public class Player : MonoBehaviour
         Controller = GetComponent<CharacterController>();
         health = GetComponent<Health>();
         timeText.text = "0.00";
+
 
         stateMachine = new PlayerStateMachine(this);
     }
@@ -39,6 +45,11 @@ public class Player : MonoBehaviour
         if (transform.position.y > 9)
         {
             Debug.Log("클리어");
+            Time.timeScale = 0.0f;
+            Cursor.lockState = CursorLockMode.None;
+            HUD.SetActive(false);
+            cleartime.text = timeText.text;
+            gameClearUI.SetActive(true);
             enabled = false;
         }
         else
@@ -55,7 +66,9 @@ public class Player : MonoBehaviour
     private void OnDie()
     {
         Debug.Log("죽음");
-        //게임오버 UI 팝업
+        Time.timeScale = 0.0f;
+        Cursor.lockState = CursorLockMode.None;
+        gameOverUI.SetActive(true);
         enabled = false;
     }
 }
